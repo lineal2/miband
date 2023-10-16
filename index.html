@@ -76,7 +76,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         var avgStress = document.getElementById("average");
-        const form = document.getElementById("uploadForm")
+        const form = document.getElementById("uploadForm");
+        const host = 'https://aquamarine-bavarois-335881.netlify.app/';
         const sendFiles = async () => {
             const myFiles = document.getElementById("dealCSV").files
             const formData = new FormData()
@@ -84,7 +85,7 @@
                 formData.append(myFiles.item(key).name, myFiles.item(key))
             })
 
-            const response = await fetch("http://localhost:3000/upload", {
+            const response = await fetch(`${host}/.netlify/functions/uploads`, {
                 method: "POST",
                 body: formData
             })
@@ -95,7 +96,7 @@
 
 
         const getData = async () => {
-            const stressResponse = await fetch('http://localhost:3000/stressData');
+            const stressResponse = fetch(`${host}/.netlify/functions/stressData`);
             var stressData = await stressResponse.json();
             //console.log(stressData);
             const last50 = stressData.slice(-50);

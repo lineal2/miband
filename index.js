@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"))
 });
 
-app.post(".netlify/functions/upload",
+app.post("/upload",
     fileUpload({
         createParentPath: true
     }),
