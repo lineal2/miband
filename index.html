@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <style>
+        .bg-dark {
+            background-color: #725377 !important;
+        }
+
+        .bg-grey {
+            background-color: #e3e3e3;
+        }
+
+        .btn-primary {
+            background-color: #361f39 !important;
+            border-color: #361f39;
+        }
+
+        button:hover {
+            background-color: #200a23 !important;
+            border-color: #200a23;
+
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="d-flex flex-grow-1">
+                <span class="w-100 d-lg-none d-block">
+                    <!-- hidden spacer to center brand on mobile --></span>
+                <a class="navbar-brand" href="#">ストレスレベル</a>
+                <div class="w-100 text-right">
+
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-3">
+
+        <div class="card">
+            <div class="card-header text-center bg-dark text-bg-dark">
+                ストレス データ (CSV) をアップロードすると、ストレス レベルがわかり、改善方法についての提案が得られます。
+            </div>
+            <div class="card-body bg-grey">
+
+                <div class="mb-3">
+
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="input-group">
+                            <input class="form-control" type="file" id="dealCSV">
+                            <button class="btn btn-primary">アップロード</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <div class="alert mt-3" id="average" role="alert">
+        </div>
+
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var avgStress = document.getElementById("average");
+        const form = document.getElementById("uploadForm")
+        const sendFiles = async () => {
+            const myFiles = document.getElementById("dealCSV").files
+            const formData = new FormData()
+            Object.keys(myFiles).forEach(key => {
+                formData.append(myFiles.item(key).name, myFiles.item(key))
+            })
+
+            const response = await fetch("http://localhost:3000/upload", {
+                method: "POST",
+                body: formData
+            })
+
+            const json = await response.json();
+            console.log(json)
+        }
+
+
+        const getData = async () => {
+            const stressResponse = await fetch('http://localhost:3000/stressData');
+            var stressData = await stressResponse.json();
+            //console.log(stressData);
+            const last50 = stressData.slice(-50);
+            console.log(last50);
+
+            //calculate average stress level
+            const findAverageStress = (arr) => {
+                const {
+                    length
+                } = arr;
+                return arr.reduce((acc, val) => {
+                    return acc + (val.value / length);
+                }, 0);
+            };
+            var avgStressLvl = findAverageStress(last50);
+
+            if (avgStressLvl <= 50) {
+                avgStress.classList.add("alert-success");
+                avgStress.innerHTML += "平均ストレスレベルは " + avgStressLvl;
+            } else if (avgStressLvl >= 50 ) {
+                avgStress.classList.add("alert-warning");
+                avgStress.innerHTML += "平均ストレスレベルは " + avgStressLvl;
+            } else {
+                avgStress.classList.add("alert-danger");
+                avgStress.innerHTML += "平均ストレスレベルは " + avgStressLvl;
+            }
+
+            //  console.log(stressData)
+            var labels = last50.map(function (e) {
+                return e.time;
+            });
+            var data = last50.map(function (e) {
+                return e.value;
+            });
+
+            const ctx = document.getElementById('myChart');
+
+
+            var config = {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'ストレスレベル',
+                        data: data,
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        fill: {
+                            target: {
+                                value: 50,
+                            },
+                            below: '#35d675',
+                            above: '#ff4747'
+                        },
+                        borderWidth: 0,
+                    }]
+                }
+            };
+
+            var chart = new Chart(ctx, config);
+        }
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault()
+            sendFiles()
+            getData()
+        })
+    </script>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
+
+</body>
+
+</html>
