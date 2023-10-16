@@ -84,7 +84,7 @@
                 formData.append(myFiles.item(key).name, myFiles.item(key))
             })
 
-            const response = await fetch("http://localhost:3000/upload", {
+            const response = await fetch("https://aquamarine-bavarois-335881.netlify.app/upload", {
                 method: "POST",
                 body: formData
             })
@@ -95,7 +95,7 @@
 
 
         const getData = async () => {
-            const stressResponse = await fetch('http://localhost:3000/stressData');
+            const stressResponse = await fetch('https://aquamarine-bavarois-335881.netlify.app/stressData');
             var stressData = await stressResponse.json();
             //console.log(stressData);
             const last50 = stressData.slice(-50);
