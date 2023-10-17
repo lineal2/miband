@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>ストレスレベル</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
@@ -41,7 +41,7 @@
                 <a class="navbar-brand" href="#">ストレスレベル</a>
                 <div class="w-100 text-right">
 
-        </div>
+                </div>
     </nav>
 
     <div class="container-fluid mt-3">
@@ -54,12 +54,8 @@
 
                 <div class="mb-3">
 
-                    <form id="uploadForm" enctype="multipart/form-data">
-                        <div class="input-group">
-                            <input class="form-control" type="file" id="dealCSV">
-                            <button class="btn btn-primary">アップロード</button>
-                        </div>
-                    </form>
+                    <input type="file" name="select" id="loadBtn" />
+                    <div id="resulttable"></div>
                 </div>
 
             </div>
@@ -74,33 +70,94 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="moment.js"></script>
+
+
+
     <script>
+        // 1: ボタンを取得してchangeイベントの設定
         var avgStress = document.getElementById("average");
-        const form = document.getElementById("uploadForm");
-        const host = 'https://aquamarine-bavarois-335881.netlify.app';
-        const sendFiles = async () => {
-            const myFiles = document.getElementById("dealCSV").files
-            const formData = new FormData()
-            Object.keys(myFiles).forEach(key => {
-                formData.append(myFiles.item(key).name, myFiles.item(key))
-            })
 
-            const response = await fetch(`${host}/.netlify/functions/uploads`, {
-                method: "POST",
-                body: formData
-            })
+        var loadBtn = document.querySelector("#loadBtn");
+        loadBtn.addEventListener("change", upload, false);
+        resArr = [];
+        resObj = {};
 
-            const json = await response.json();
-            console.log(json)
+        function upload(event) {
+            // 2：chekFileReader関数でFileAPIにブラウザが対応してるかチェック
+            if (!checkFileReader()) {
+                alert("エラー：FileAPI非対応のブラウザです。");
+            } else {
+                // 3: 選択されたファイル情報を取得
+                var file = event.target.files[0];
+                var type = file.type; // MIMEタイプ
+                var size = file.size; // ファイル容量（byte）
+                var limit = 10000; // byte, 10KB
+
+                // MIMEタイプの判定
+                if (type == "image/jpeg") {
+                    alert("画像はアップロードできません");
+                    loadBtn.value = "";
+                    return;
+                }
+
+                //readerオブジェクトを作成
+                var reader = new FileReader();
+                // ファイル読み取りを実行
+                reader.readAsText(file);
+
+                // 4：CSVファイルを読み込む処理とエラー処理をする
+                reader.onload = function (event) {
+                    var result = event.target.result;
+                    makeCSV(result);
+                };
+
+                //読み込めなかった場合のエラー処理
+                reader.onerror = function () {
+                    alert("エラー：ファイルをロードできません。");
+                };
+            }
         }
 
+        //csvをうまく出力する
+        function makeCSV(csvdata) {
+            //csvデータを1行ごとに配列にする
+            var tmp = csvdata.split("\n");
 
-        const getData = async () => {
-            const stressResponse = fetch(`${host}/.netlify/functions/stressData`);
-            var stressData = await stressResponse.json();
-            //console.log(stressData);
-            const last50 = stressData.slice(-50);
+            tmp.forEach(i => {
+                resObj = {};
+                var original = i;
+                if (i.includes("stress") && !i.includes("single")) {
+                    arr = i.split(`""time"":`);
+                    arr.shift();
+                    i = arr.join("}");
+                    i = i.substring(0, i.length - 27);
+
+                    //parse the time value
+                    var unixSeconds = (i).toString();
+                    var unixMilliSeconds = unixSeconds * 1000;
+                    var myDate = new Date(unixMilliSeconds);
+
+                    //parse the stress value
+                    original = original.substring(0, original.length - 13);
+                    arr = original.split(`""stress"":`);
+                    arr.shift();
+                    original = arr.join("}");
+
+                    var myValue = original;
+
+                    resObj.time = myDate;
+                    resObj.value = myValue;
+
+                    resArr.push(resObj);
+
+                }
+            });
+
+            //  get the last 50 entries
+            const last50 = resArr.slice(-50);
             console.log(last50);
+
 
             //calculate average stress level
             const findAverageStress = (arr) => {
@@ -116,7 +173,7 @@
             if (avgStressLvl <= 50) {
                 avgStress.classList.add("alert-success");
                 avgStress.innerHTML += "平均ストレスレベルは " + avgStressLvl;
-            } else if (avgStressLvl >= 50 ) {
+            } else if (avgStressLvl >= 50) {
                 avgStress.classList.add("alert-warning");
                 avgStress.innerHTML += "平均ストレスレベルは " + avgStressLvl;
             } else {
@@ -158,14 +215,21 @@
             var chart = new Chart(ctx, config);
         }
 
-        form.addEventListener("submit", (e) => {
-            e.preventDefault()
-            sendFiles()
-            getData()
-        })
+
+
+        // ファイルアップロード判定
+        function checkFileReader() {
+            var isUse = false;
+            if (window.File && window.FileReader && window.FileList && window.Blob) {
+                isUse = true;
+            }
+            return isUse;
+        }
     </script>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
