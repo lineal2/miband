@@ -1,0 +1,52 @@
+.bg-dark {
+    background-color: #725377 !important;
+}
+
+.bg-grey {
+    background-color: #e3e3e3;
+}
+
+.navtop {
+    height: 35px;
+}
+
+.navtop i {
+     font-size: 25px;
+}
+
+.navtop i:hover {
+    cursor: pointer;
+}
+
+.navtitle {
+    font-size: 20px;
+} 
+
+.btn-primary {
+    background-color: #361f39 !important;
+    border-color: #361f39;
+}
+
+button:hover {
+    background-color: #200a23 !important;
+    border-color: #200a23;
+}
+
+.stressResult {
+    display: none;
+}
+.stressResult i {
+    font-size: 50px;
+}
+
+#badStress i {
+    color: rgba(236, 82, 74, 1);
+}
+
+#goodStress i {
+    color: rgba(127, 194, 110, 1);
+}
+
+#medStress i {
+    color: rgba(255, 169, 87, 1);
+}
