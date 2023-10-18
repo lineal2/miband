@@ -201,7 +201,7 @@
                     var unixSeconds = (i).toString();
                     var unixMilliSeconds = unixSeconds * 1000;
                     var myDate = new Date(unixMilliSeconds);
-                    myDate = moment(myDate).format('DD/MM/YY HH:mm');
+                    myDate = moment(myDate).format('YYYY/MM/DD HH:mm');
 
                     //parse the stress value 応力値を解析する
                     original = original.substring(0, original.length - 13);
