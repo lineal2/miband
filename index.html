@@ -233,19 +233,19 @@
                 goodStress.style.display = "block";
                 goodStressRec.style.display = "block";
                 avgStress.classList.add("alert-success");
-                avgStress.innerHTML += "平均ストレスレベルは" + avgStressLvl + "です。";
+                avgStress.innerHTML += "平均ストレスレベルは" + avgStressLvl + "です。</br><small>ストレスレベルを下げる方法については、<a href='#goodStressRec'>以下をご覧ください。</a></small>";
 
             } else if (avgStressLvl >= 45 && avgStressLvl < 60) {
                 medStress.style.display = "block";
                 medStressRec.style.display = "block";
                 avgStress.classList.add("alert-warning");
-                avgStress.innerHTML += "平均ストレスレベルは" + avgStressLvl + "です。";
+                avgStress.innerHTML += "平均ストレスレベルは" + avgStressLvl + "です。</br><small>ストレスレベルを下げる方法については、<a href='#medStressRec'>以下をご覧ください。</a></small>";
 
             } else {
                 badStress.style.display = "block";
                 badStressRec.style.display = "block";
                 avgStress.classList.add("alert-danger");
-                avgStress.innerHTML += "平均ストレスレベルは" + avgStressLvl + "です。";
+                avgStress.innerHTML += "平均ストレスレベルは" + avgStressLvl + "です。</br><small>ストレスレベルを下げる方法については、<a href='#badStressRec'>以下をご覧ください。</a></small>";
             }
 
             //直近の50件をグラフに表示する。
