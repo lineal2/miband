@@ -48,14 +48,24 @@ button:hover {
 #goodStress i {
     color: rgba(127, 194, 110, 1);
     font-size: 50px;
-
 }
 
 #medStress i {
     color: rgba(255, 169, 87, 1);
-    
 }
 
 #chartTitle {
     font-size: 13px;
+}
+
+.bg-lg-grn {
+    background-color: #D1E7DD;
+}
+
+.bg-lg-red {
+    background-color: #F8D7DA;
+}
+
+.bg-lg-yel {
+    background-color: #FFF3CD;
 }
