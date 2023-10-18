@@ -217,13 +217,6 @@
             const last50 = resArr.slice(-50);
             console.log(last50);
 
-            //get the most stressful day ストレスの多い一日を過ごす
-            const mostStress = last50.map(object => {
-                return object.value;
-            });
-            const max = Math.max(...mostStress);
-            console.log(max);
-
             //calculate average stress level 平均ストレスレベルを計算する
             const findAverageStress = (arr) => {
                 const {
