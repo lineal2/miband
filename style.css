@@ -32,7 +32,7 @@ button:hover {
     border-color: #200a23;
 }
 
-.stressResult {
+.stressResult, #chartTitle, #goodStressRec, #badStressRec, #medStressRec {
     display: none;
 }
 .stressResult i {
@@ -41,12 +41,21 @@ button:hover {
 
 #badStress i {
     color: rgba(236, 82, 74, 1);
+    font-size: 50px;
+
 }
 
 #goodStress i {
     color: rgba(127, 194, 110, 1);
+    font-size: 50px;
+
 }
 
 #medStress i {
     color: rgba(255, 169, 87, 1);
+    
+}
+
+#chartTitle {
+    font-size: 13px;
 }

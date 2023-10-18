@@ -4,40 +4,45 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ストレスレベル</title>
+    <title>Stress Level Checker</title>
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-        <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-<div class="bg-dark text-white p-3">
-    <div class="navtop d-flex justify-content-between align-items-center">
-        <div class="navtitle">
-        ストレスレベル
-        </div>
-        <div>
-            
-            <i class="fa fa-refresh" aria-hidden="true" onClick="window.location.reload()"></i>
+    <div class="bg-dark text-white p-3">
+        <div class="navtop d-flex justify-content-between align-items-center">
+            <div class="navtitle">
+                Stress Level Checker
+            </div>
+            <div>
+                <i class="fa fa-refresh" aria-hidden="true" onClick="window.location.reload()"></i>
+            </div>
         </div>
     </div>
-</div>
 
     <div class="container-fluid mt-3">
-        
+
         <div class="card" id="uploadCard">
             <div class="card-header text-center bg-dark text-bg-dark">
-                ストレス データ (CSV) をアップロードすると、ストレス レベルがわかり、改善方法についての提案が得られます。
-            </div>
+                CSV をアップロードしてストレス レベルを確認します。 </div>
             <div class="card-body bg-grey">
-                    <input type="file" name="select" id="loadBtn" />
-                    <div id="resulttable"></div>
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" id="loadBtn">
+                </div>
+
+                <!-- <input type="file" name="select" id="loadBtn" /> -->
+                <div id="resulttable"></div>
             </div>
         </div>
-
+        <div class="alert mt-3 text-center" id="average" role="alert">
+        </div>
         <div class="stressResult text-center" id="goodStress">
             <i class="fa fa-smile-o" aria-hidden="true"></i>
         </div>
@@ -50,12 +55,57 @@
             <i class="fa fa-frown-o" aria-hidden="true"></i>
         </div>
 
-        <div class="alert mt-3 text-center" id="average" role="alert">
+       <div id="chartTitle" class="mt-2 text-center">
+            このグラフは、最新の 50 件のストレス エントリを示しています。
         </div>
-
         <div>
             <canvas id="myChart"></canvas>
         </div>
+
+        <div class="card mt-3" id="goodStressRec">
+            <div class="card-header bg-success text-white">
+              Recommended Activities to Reduce Stress
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Your stress level is normal.</h5>
+              <p class="card-text">If you want to lower your stress level, consider the following activities:</p>
+              <ul>
+                <li>Take a walk everyday</li>
+                <li>Take a walk everyday</li>
+                <li>Take a walk everyday</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card mt-3" id="medStressRec">
+            <div class="card-header bg-warning text-black">
+              Recommended Activities to Reduce Stress
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Your stress level is a little high.</h5>
+              <p class="card-text">If you want to lower your stress level, consider the following activities:</p>
+              <ul>
+                <li>Take a walk everyday</li>
+                <li>Take a walk everyday</li>
+                <li>Take a walk everyday</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card mt-3" id="badStressRec">
+            <div class="card-header bg-danger text-white">
+              Recommended Activities to Reduce Stress
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Your stress level is high.</h5>
+              <p class="card-text">If you want to lower your stress level, consider the following activities:</p>
+              <ul>
+                <li>Take a walk everyday</li>
+                <li>Take a walk everyday</li>
+                <li>Take a walk everyday</li>
+              </ul>
+            </div>
+          </div>
     </div>
 
 
@@ -65,15 +115,29 @@
 
 
     <script>
-        // 1: ボタンを取得してchangeイベントの設定
+        //Average Stress
         var avgStress = document.getElementById("average");
+
+        //File upload and button
         var theCard = document.getElementById("uploadCard");
         var loadBtn = document.querySelector("#loadBtn");
+
+        //絵文字
         var badStress = document.getElementById("badStress");
         var medStress = document.getElementById("medStress");
         var goodStress = document.getElementById("goodStress");
 
+        //Chart title
+        var chartTitle = document.getElementById("chartTitle");
+
+        //Recommendations
+        var goodStressRec = document.getElementById("goodStressRec");
+        var badStressRec = document.getElementById("badStressRec");
+        var medStressRec = document.getElementById("medStressRec");
+
         loadBtn.addEventListener("change", upload, false);
+
+        //Array to hold the stress data as an object
         resArr = [];
         resObj = {};
 
@@ -128,13 +192,13 @@
                     i = arr.join("}");
                     i = i.substring(0, i.length - 27);
 
-                    //parse the time value
+                    //parse the time value 時間値を解析する
                     var unixSeconds = (i).toString();
                     var unixMilliSeconds = unixSeconds * 1000;
                     var myDate = new Date(unixMilliSeconds);
-                    myDate = moment(myDate).format('DD-MM-YYYY HH:mm');
+                    myDate = moment(myDate).format('DD/MM/YY HH:mm');
 
-                    //parse the stress value
+                    //parse the stress value 応力値を解析する
                     original = original.substring(0, original.length - 13);
                     arr = original.split(`""stress"":`);
                     arr.shift();
@@ -150,12 +214,18 @@
                 }
             });
 
-            //  get the last 50 entries
+            //  get the last 50 entries 直近の50件を取得する
             const last50 = resArr.slice(-50);
             console.log(last50);
 
+            //get the most stressful day ストレスの多い一日を過ごす
+            const mostStress = last50.map(object => {
+                return object.value;
+            });
+            const max = Math.max(...mostStress);
+            console.log(max);
 
-            //calculate average stress level
+            //calculate average stress level 平均ストレスレベルを計算する
             const findAverageStress = (arr) => {
                 const {
                     length
@@ -164,25 +234,29 @@
                     return acc + (val.value / length);
                 }, 0);
             };
-            var avgStressLvl = findAverageStress(last50);
+            var avgStressLvl = findAverageStress(resArr);
             avgStressLvl = (Math.round(avgStressLvl));
 
             if (avgStressLvl < 45) {
                 goodStress.style.display = "block";
+                goodStressRec.style.display = "block";
                 avgStress.classList.add("alert-success");
                 avgStress.innerHTML += "平均ストレスレベルは" + avgStressLvl + "です。";
+
             } else if (avgStressLvl >= 45 && avgStressLvl < 60) {
                 medStress.style.display = "block";
-
+                medStressRec.style.display = "block";
                 avgStress.classList.add("alert-warning");
                 avgStress.innerHTML += "平均ストレスレベルは" + avgStressLvl + "です。";
+
             } else {
                 badStress.style.display = "block";
+                badStressRec.style.display = "block";
                 avgStress.classList.add("alert-danger");
                 avgStress.innerHTML += "平均ストレスレベルは" + avgStressLvl + "です。";
             }
 
-            //  console.log(stressData)
+            //直近の50件をグラフに表示する。
             var labels = last50.map(function (e) {
                 return e.time;
             });
@@ -206,6 +280,9 @@
 
             }
 
+            chartTitle.style.display = "block";
+
+
             var config = {
                 type: 'line',
                 data: {
@@ -216,8 +293,8 @@
                         backgroundColor: backgroundColor,
                         borderWidth: 1,
                         pointStyle: 'rectRounded',
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
                         borderColor: "rgba(0, 0, 0, 0.29)",
                         tension: 0.2,
 
