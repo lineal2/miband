@@ -37,8 +37,6 @@
                     <input type="file" class="form-control" id="loadBtn">
                 </div>
 
-                <!-- <input type="file" name="select" id="loadBtn" /> -->
-
             </div>
         </div>
 
@@ -116,8 +114,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="moment.js"></script>
-
-
 
     <script>
         //Average Stress
@@ -247,22 +243,34 @@
                 goodStress.style.display = "block";
                 goodStressRec.style.display = "block";
                 avgStress.classList.add("alert-success");
-                avgStress.innerHTML += "<div class='card mb-3'><div class='card-header text-white bg-success text-center'><strong>平均ストレスレベルは" + avgStressLvl +
-                    "です。</strong></div><div class='card-body bg-lg-grn'><ul><li>ストレスレベルの最低値は "+ leastStress.time+" の「"+ leastStress.value + "」でした。<li>ストレスレベルの最高値は "+ maxStress.time+" の「"+ maxStress.value + "」でした。</li></ul><div class='text-center'>ストレスレベルを下げる方法については、<a href='#goodStressRec'>以下をご覧ください。</a></div></div></div>";
+                avgStress.innerHTML +=
+                    "<div class='card mb-3'><div class='card-header text-white bg-success text-center'><strong>平均ストレスレベルは" +
+                    avgStressLvl +
+                    "です。</strong></div><div class='card-body bg-lg-grn'><ul><li>ストレスレベルの最低値は " + leastStress.time +
+                    " の「" + leastStress.value + "」でした。<li>ストレスレベルの最高値は " + maxStress.time + " の「" + maxStress.value +
+                    "」でした。</li></ul><div class='text-center'>ストレスレベルを下げる方法については、<a href='#goodStressRec'>以下をご覧ください。</a></div></div></div>";
 
             } else if (avgStressLvl >= 45 && avgStressLvl < 60) {
                 medStress.style.display = "block";
                 medStressRec.style.display = "block";
                 avgStress.classList.add("alert-warning");
-                avgStress.innerHTML += "<div class='card mb-3'><div class='card-header text-black bg-warning text-center'><strong>平均ストレスレベルは" + avgStressLvl +
-                    "です。</strong></div><div class='card-body bg-lg-yel'><ul><li>ストレスレベルの最低値は "+ leastStress.time+" の「"+ leastStress.value + "」でした。<li>ストレスレベルの最高値は "+ maxStress.time+" の「"+ maxStress.value + "」でした。</li></ul><div class='text-center'>ストレスレベルを下げる方法については、<a href='#midStressRec'>以下をご覧ください。</a></div></div></div>";
+                avgStress.innerHTML +=
+                    "<div class='card mb-3'><div class='card-header text-black bg-warning text-center'><strong>平均ストレスレベルは" +
+                    avgStressLvl +
+                    "です。</strong></div><div class='card-body bg-lg-yel'><ul><li>ストレスレベルの最低値は " + leastStress.time +
+                    " の「" + leastStress.value + "」でした。<li>ストレスレベルの最高値は " + maxStress.time + " の「" + maxStress.value +
+                    "」でした。</li></ul><div class='text-center'>ストレスレベルを下げる方法については、<a href='#midStressRec'>以下をご覧ください。</a></div></div></div>";
 
             } else {
                 badStress.style.display = "block";
                 badStressRec.style.display = "block";
                 avgStress.classList.add("alert-danger");
-                avgStress.innerHTML += "<div class='card mb-3'><div class='card-header text-white bg-danger text-center'><strong>平均ストレスレベルは" + avgStressLvl +
-                    "です。</strong></div><div class='card-body bg-lg-red'><ul><li>ストレスレベルの最低値は "+ leastStress.time+" の「"+ leastStress.value + "」でした。<li>ストレスレベルの最高値は "+ maxStress.time+" の「"+ maxStress.value + "」でした。</li></ul><div class='text-center'>ストレスレベルを下げる方法については、<a href='#badStressRec'>以下をご覧ください。</a></div></div></div>";
+                avgStress.innerHTML +=
+                    "<div class='card mb-3'><div class='card-header text-white bg-danger text-center'><strong>平均ストレスレベルは" +
+                    avgStressLvl +
+                    "です。</strong></div><div class='card-body bg-lg-red'><ul><li>ストレスレベルの最低値は " + leastStress.time +
+                    " の「" + leastStress.value + "」でした。<li>ストレスレベルの最高値は " + maxStress.time + " の「" + maxStress.value +
+                    "」でした。</li></ul><div class='text-center'>ストレスレベルを下げる方法については、<a href='#badStressRec'>以下をご覧ください。</a></div></div></div>";
             }
 
             //直近の50件をグラフに表示する。
@@ -273,11 +281,8 @@
                 return e.value;
             });
 
-
             const ctx = document.getElementById('myChart');
-
             const backgroundColor = [];
-
 
             for (i = 0; i < data.length; i++) {
                 if (data[i] < 45) {
@@ -319,8 +324,6 @@
 
             var chart = new Chart(ctx, config);
         }
-
-
 
         // ファイルアップロード判定
         function checkFileReader() {
