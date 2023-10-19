@@ -69,3 +69,7 @@ button:hover {
 .bg-lg-yel {
     background-color: #FFF3CD;
 }
+
+.avg {
+    font-size: 40px;
+}

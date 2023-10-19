@@ -116,10 +116,10 @@
     <script src="moment.js"></script>
 
     <script>
-        //Average Stress
+        //Average Stress　平均ストレス
         var avgStress = document.getElementById("average");
 
-        //File upload and button
+        //File upload and button　ファイルのアップロードとボタン
         var theCard = document.getElementById("uploadCard");
         var loadBtn = document.querySelector("#loadBtn");
 
@@ -128,20 +128,21 @@
         var medStress = document.getElementById("medStress");
         var goodStress = document.getElementById("goodStress");
 
-        //Chart title
+        //Chart title　グラフタイトル
         var chartTitle = document.getElementById("chartTitle");
 
-        //Recommendations
+        //Recommendations　ストレスレベルを下げる方法
         var goodStressRec = document.getElementById("goodStressRec");
         var badStressRec = document.getElementById("badStressRec");
         var medStressRec = document.getElementById("medStressRec");
 
         loadBtn.addEventListener("change", upload, false);
 
-        //Array to hold the stress data as an object
+        //Array to hold the stress data as an object　ストレスデータをオブジェクトとして保持する配列。
         resArr = [];
         resObj = {};
 
+        //https://the-zombis.sakura.ne.jp/wp/blog/2019/08/17/post-3938/
         function upload(event) {
             theCard.style.display = "none";
             // 2：chekFileReader関数でFileAPIにブラウザが対応してるかチェック
@@ -197,7 +198,7 @@
                     var unixSeconds = (i).toString();
                     var unixMilliSeconds = unixSeconds * 1000;
                     var myDate = new Date(unixMilliSeconds);
-                    myDate = moment(myDate).format('YYYY/MM/DD HH:mm');
+                    myDate = moment(myDate).format('YY/MM/DD HH:mm');
 
                     //parse the stress value 応力値を解析する
                     original = original.substring(0, original.length - 13);
@@ -210,8 +211,8 @@
                     resObj.time = myDate;
                     resObj.value = myValue;
 
+                    //push the data to the array 配列にデータをプッシュする
                     resArr.push(resObj);
-
                 }
             });
 
@@ -231,14 +232,17 @@
             var avgStressLvl = findAverageStress(resArr);
             avgStressLvl = (Math.round(avgStressLvl));
 
-            //get highest stress level
+            //get highest stress level　最高のストレスレベルを得る
             let maxStress = resArr.reduce((max, stresslv) => max.value > stresslv.value ? max : stresslv);
             console.log(maxStress)
 
-            //get lowest stress level
+            //get lowest stress level　最低のストレスレベルを得る
             let leastStress = resArr.reduce((max, stresslv) => max.value < stresslv.value ? max : stresslv);
             console.log(leastStress)
 
+            //display the result 結果を表示する
+
+            //good result 良い結果
             if (avgStressLvl < 45) {
                 goodStress.style.display = "block";
                 goodStressRec.style.display = "block";
@@ -246,10 +250,11 @@
                 avgStress.innerHTML +=
                     "<div class='card mb-3'><div class='card-header text-white bg-success text-center'><strong>平均ストレスレベルは" +
                     avgStressLvl +
-                    "です。</strong></div><div class='card-body bg-lg-grn'><ul><li>ストレスレベルの最低値は " + leastStress.time +
-                    " の「" + leastStress.value + "」でした。<li>ストレスレベルの最高値は " + maxStress.time + " の「" + maxStress.value +
-                    "」でした。</li></ul><div class='text-center'>ストレスレベルを下げる方法については、<a href='#goodStressRec'>以下をご覧ください。</a></div></div></div>";
+                    "です。</strong></div><div class='card-body bg-lg-grn'><ul><li>ストレスレベルの最低値：" + leastStress.time +
+                    " の「" + leastStress.value + "」<li>ストレスレベルの最高値： " + maxStress.time + " の「" + maxStress.value +
+                    "」</li></ul><div class='text-center'><small>ストレスレベルを下げる方法については、<a href='#goodStressRec'>以下をご覧ください。</a></small></div></div></div>";
 
+                   //Medium result 中位結果
             } else if (avgStressLvl >= 45 && avgStressLvl < 60) {
                 medStress.style.display = "block";
                 medStressRec.style.display = "block";
@@ -261,6 +266,7 @@
                     " の「" + leastStress.value + "」でした。<li>ストレスレベルの最高値は " + maxStress.time + " の「" + maxStress.value +
                     "」でした。</li></ul><div class='text-center'>ストレスレベルを下げる方法については、<a href='#midStressRec'>以下をご覧ください。</a></div></div></div>";
 
+                    //bad result 悪い結果
             } else {
                 badStress.style.display = "block";
                 badStressRec.style.display = "block";
@@ -281,6 +287,7 @@
                 return e.value;
             });
 
+            //set the colour of the chart points based on the value 値に基づいてグラフポイントの色を設定する。
             const ctx = document.getElementById('myChart');
             const backgroundColor = [];
 
@@ -294,6 +301,7 @@
                 }
             }
 
+            //display the chart グラフを表示
             chartTitle.style.display = "block";
 
             var config = {
