@@ -8,26 +8,65 @@
 
 .bg-cardbad {
     background-color: rgb(241, 173, 170) !important;
+    border-bottom: 3px solid #d3534f;
+}
+
+.alert-success {
+    border-color: #7FC26E;
+}
+
+.alert-good {
+    border: 1px solid #7FC26E;
+}
+
+.alert-good span {
+    color: #59904c;
+}
+
+.alert-ok {
+    border: 1px solid #FF9735;
+}
+
+.alert-ok span {
+    color: #ac5605;
+}
+
+.alert-bad {
+    border: 1px solid #e58c89;
+}
+
+.alert-bad span {
+    color: #bd4440;
+}
+
+.cardok {
+    border: 1px solid #7FC26E !important;
+}
+
+.cardbad {
+    border: 1px solid #e58c89 !important;
 }
 
 .bg-cardok {
     background-color: #bce0b1 !important;
+    border-bottom: 3px solid #599849;
 }
 
 .card {
     box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-     border: none;
+    border: none;
 }
 
 .alert {
     box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
+
 .navtop {
     height: 35px;
 }
 
 .navtop i {
-     font-size: 25px;
+    font-size: 25px;
 }
 
 .navtop i:hover {
@@ -36,7 +75,7 @@
 
 .navtitle {
     font-size: 20px;
-} 
+}
 
 .btn-primary {
     background-color: #361f39 !important;
@@ -48,9 +87,15 @@ button:hover {
     border-color: #200a23;
 }
 
-.stressResult, #chartTitle, #goodStressRec, #badStressRec, #medStressRec, #infoText {
+.stressResult,
+#chartTitle,
+#goodStressRec,
+#badStressRec,
+#medStressRec,
+#infoText {
     display: none;
 }
+
 .stressResult i {
     font-size: 50px;
 }

@@ -264,11 +264,11 @@
                 goodStressRec.style.display = "block";
                 avgStress.classList.add("alert-success");
                 avgStress.innerHTML +=
-                    "<div class='alert alert-success text-center' role='alert'><strong>平均ストレスレベルは<span class='avgnum'>「" +
+                    "<div class='alert alert-good text-center' role='alert'><strong>平均ストレスレベルは<span class='avgnum'>「" +
                     avgStressLvl +
-                    "」</span>です。</strong></div><div class='row'><div class='col-6'><div class='card text-center'><div class='card-header bg-cardok'>最低値</div><div class='card-body'><h3 class='card-text'>" +
+                    "」</span>です。</strong></div><div class='row'><div class='col-6'><div class='card text-center cardok'><div class='card-header bg-cardok'>最低値</div><div class='card-body'><h3 class='card-text'>" +
                     leastStress.value + " </h3></div><div class='card-footer text-body-secondary'>" + leastStress.time +
-                    " </div></div></div><div class='col-6'><div class='card text-center'><div class='card-header bg-cardbad'>最高値</div><div class='card-body'><h3 class='card-text'>" +
+                    " </div></div></div><div class='col-6'><div class='card cardbad text-center'><div class='card-header bg-cardbad'>最高値</div><div class='card-body'><h3 class='card-text'>" +
                     maxStress.value + " </h3></div><div class='card-footer text-body-secondary'>" + maxStress.time +
                     " </div></div></div></div>"
 
@@ -278,11 +278,13 @@
                 medStressRec.style.display = "block";
                 avgStress.classList.add("alert-warning");
                 avgStress.innerHTML +=
-                    "<div class='card mb-3'><div class='card-header text-black bg-warning text-center'><strong>平均ストレスレベルは" +
+                    "<div class='alert alert-ok text-center' role='alert'><strong>平均ストレスレベルは<span class='avgnum'>「" +
                     avgStressLvl +
-                    "です。</strong></div><div class='card-body bg-lg-yel'><ul><li>ストレスレベルの最低値は " + leastStress.time +
-                    " の「" + leastStress.value + "」でした。<li>ストレスレベルの最高値は " + maxStress.time + " の「" + maxStress.value +
-                    "」でした。</li></ul><div class='text-center'>ストレスレベルを下げる方法については、<a href='#midStressRec'>以下をご覧ください。</a></div></div></div>";
+                    "」</span>です。</strong></div><div class='row'><div class='col-6'><div class='card text-center'><div class='card-header bg-cardok'>最低値</div><div class='card-body'><h3 class='card-text'>" +
+                    leastStress.value + " </h3></div><div class='card-footer text-body-secondary'>" + leastStress.time +
+                    " </div></div></div><div class='col-6'><div class='card text-center'><div class='card-header bg-cardbad'>最高値</div><div class='card-body'><h3 class='card-text'>" +
+                    maxStress.value + " </h3></div><div class='card-footer text-body-secondary'>" + maxStress.time +
+                    " </div></div></div></div>"
 
                 //bad result 悪い結果
             } else {
@@ -290,11 +292,13 @@
                 badStressRec.style.display = "block";
                 avgStress.classList.add("alert-danger");
                 avgStress.innerHTML +=
-                    "<div class='card mb-3'><div class='card-header text-white bg-danger text-center'><strong>平均ストレスレベルは" +
+                    "<div class='alert alert-bad text-center' role='alert'><strong>平均ストレスレベルは<span class='avgnum'>「" +
                     avgStressLvl +
-                    "です。</strong></div><div class='card-body bg-lg-red'><ul><li>ストレスレベルの最低値は " + leastStress.time +
-                    " の「" + leastStress.value + "」でした。<li>ストレスレベルの最高値は " + maxStress.time + " の「" + maxStress.value +
-                    "」でした。</li></ul><div class='text-center'>ストレスレベルを下げる方法については、<a href='#badStressRec'>以下をご覧ください。</a></div></div></div>";
+                    "」</span>です。</strong></div><div class='row'><div class='col-6'><div class='card text-center'><div class='card-header bg-cardok'>最低値</div><div class='card-body'><h3 class='card-text'>" +
+                    leastStress.value + " </h3></div><div class='card-footer text-body-secondary'>" + leastStress.time +
+                    " </div></div></div><div class='col-6'><div class='card text-center'><div class='card-header bg-cardbad'>最高値</div><div class='card-body'><h3 class='card-text'>" +
+                    maxStress.value + " </h3></div><div class='card-footer text-body-secondary'>" + maxStress.time +
+                    " </div></div></div></div>"
             }
 
             const green = [];
@@ -347,12 +351,28 @@
                 }
             }
 
+            let width, height, gradient;
+
+            function getGradient(ctx, chartArea) {
+                const chartWidth = chartArea.right - chartArea.left;
+                const chartHeight = chartArea.bottom - chartArea.top;
+                if (!gradient || width !== chartWidth || height !== chartHeight) {
+                    // Create the gradient because this is either the first render
+                    // or the size of the chart has changed
+                    width = chartWidth;
+                    height = chartHeight;
+                    gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                    gradient.addColorStop(0, 'rgb(127, 194, 110)');
+                    gradient.addColorStop(0.5, 'rgb(255, 169, 87)');
+                    gradient.addColorStop(1, 'rgb(236, 82, 74)');
+                }
+
+                return gradient;
+            }
 
             //display the chart グラフを表示
             //https://www.chartjs.org/
             chartTitle.style.display = "block";
-
-            
 
             var config = {
                 type: 'line',
@@ -362,12 +382,24 @@
                         label: 'ストレスレベル',
                         data: data,
                         backgroundColor: backgroundColor,
-                        borderWidth: 1,
-                        pointStyle: 'rectRounded',
-                        pointRadius: 4,
+                        borderWidth: 3,
+                        pointStyle: 'circle',
+                        pointRadius: 3,
                         pointHoverRadius: 5,
-                        borderColor: "rgba(0, 0, 0, 0.29)",
                         tension: 0.5,
+                        borderColor: function (context) {
+                            const chart = context.chart;
+                            const {
+                                ctx,
+                                chartArea
+                            } = chart;
+
+                            if (!chartArea) {
+                                // This case happens on initial chart load
+                                return;
+                            }
+                            return getGradient(ctx, chartArea);
+                        },
 
                     }]
                 },
