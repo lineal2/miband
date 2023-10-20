@@ -6,6 +6,22 @@
     background-color: #e3e3e3;
 }
 
+.bg-cardbad {
+    background-color: rgb(241, 173, 170) !important;
+}
+
+.bg-cardok {
+    background-color: #bce0b1 !important;
+}
+
+.card {
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+     border: none;
+}
+
+.alert {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
 .navtop {
     height: 35px;
 }
@@ -32,7 +48,7 @@ button:hover {
     border-color: #200a23;
 }
 
-.stressResult, #chartTitle, #goodStressRec, #badStressRec, #medStressRec {
+.stressResult, #chartTitle, #goodStressRec, #badStressRec, #medStressRec, #infoText {
     display: none;
 }
 .stressResult i {
@@ -72,4 +88,8 @@ button:hover {
 
 .avg {
     font-size: 40px;
+}
+
+.avgnum {
+    font-size: 23px;
 }
