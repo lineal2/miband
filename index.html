@@ -17,7 +17,7 @@
 
 <body>
     <!--Navbar ナビゲーションバー-->
-    <div class="bg-dark text-white p-3">
+    <div class="bg-nav text-white p-3" id="navbar">
         <div class="navtop d-flex justify-content-between align-items-center">
             <div class="navtitle">
                 Stress Level Checker
@@ -96,7 +96,7 @@
                 <span>ストレスレベルを下げる方法</span>
                 <span><i class="fa fa-heart" aria-hidden="true"></i></span>
             </div>
-            <div class="card-body">
+            <div class="card-body bg-lg-yel">
                 <h5 class="card-title">Your stress level is a little high. <i class="fa fa-meh-o"
                         aria-hidden="true"></i></h5>
                 <p class="card-text">If you want to lower your stress level, consider the following activities:</p>
@@ -114,7 +114,7 @@
                 <span>ストレスレベルを下げる方法</span>
                 <span><i class="fa fa-heart" aria-hidden="true"></i></span>
             </div>
-            <div class="card-body">
+            <div class="card-body bg-lg-red">
                 <h5 class="card-title">Your stress level is high. <i class="fa fa-frown-o" aria-hidden="true"></i></h5>
                 <p class="card-text">If you want to lower your stress level, consider the following activities:</p>
                 <ul>
@@ -135,6 +135,10 @@
     <script src="moment.js"></script>
 
     <script>
+
+        //navbar 
+        var navbar = document.getElementById("navbar");
+
         //Average Stress　平均ストレス
         var avgStress = document.getElementById("average");
 
@@ -263,6 +267,8 @@
                 goodStress.style.display = "block";
                 goodStressRec.style.display = "block";
                 avgStress.classList.add("alert-success");
+                navbar.style.backgroundColor = "#198754";
+
                 avgStress.innerHTML +=
                     "<div class='alert alert-good text-center' role='alert'><strong>平均ストレスレベルは<span class='avgnum'>「" +
                     avgStressLvl +
@@ -277,6 +283,8 @@
                 medStress.style.display = "block";
                 medStressRec.style.display = "block";
                 avgStress.classList.add("alert-warning");
+                navbar.style.backgroundColor = "#FFC107";
+
                 avgStress.innerHTML +=
                     "<div class='alert alert-ok text-center' role='alert'><strong>平均ストレスレベルは<span class='avgnum'>「" +
                     avgStressLvl +
@@ -291,6 +299,9 @@
                 badStress.style.display = "block";
                 badStressRec.style.display = "block";
                 avgStress.classList.add("alert-danger");
+                navbar.style.backgroundColor = "#DC3545";
+
+
                 avgStress.innerHTML +=
                     "<div class='alert alert-bad text-center' role='alert'><strong>平均ストレスレベルは<span class='avgnum'>「" +
                     avgStressLvl +
